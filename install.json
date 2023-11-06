@@ -1,0 +1,46 @@
+{
+  "requires": [{
+    "type": "conda",
+    "name": ["ffmpeg", "cmake"],
+    "args": "-c conda-forge"
+  }],
+  "run": [{
+    "method": "shell.run",
+    "params": {
+      "message": [
+        "git clone https://github.com/ggerganov/llama.cpp", 
+        "git clone https://github.com/Fuzzy-Search/realtime-bakllava"
+      ]
+    }
+  }, {
+    "method": "fs.download",
+    "params": {
+      "uri": "https://huggingface.co/mys/ggml_bakllava-1/resolve/main/ggml-model-q4_k.gguf",
+      "dir": "llama.cpp/models"
+    }
+  }, {
+    "method": "fs.download",
+    "params": {
+      "uri": "https://huggingface.co/mys/ggml_bakllava-1/resolve/main/mmproj-model-f16.gguf",
+      "dir": "llama.cpp/models"
+    }
+  }, {
+    "method": "shell.run",
+    "params": {
+      "message": [
+        "mkdir build",
+        "cd build",
+        "cmake ..",
+        "cmake --build . --config Release"
+      ],
+      "path": "llama.cpp"
+    }
+  }, {
+    "method": "shell.run",
+    "params": {
+      "venv": "bakllava-venv",
+      "path": "realtime-bakllava",
+      "message": "pip install -r requirements.txt"
+    }
+  }]
+}
